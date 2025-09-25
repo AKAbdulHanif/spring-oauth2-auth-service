@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  oauth2-auth-server:
+    build: .
+    container_name: oauth2-auth-server
+    ports:
+      - "9000:9000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_PORT=9000
+      - LOGGING_LEVEL_ROOT=INFO
+      - JAVA_OPTS=-Xmx512m -Xms256m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/auth/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - oauth2-network
+
+  # Optional: PostgreSQL for production
+  postgres:
+    image: postgres:13
+    container_name: oauth2-postgres
+    environment:
+      POSTGRES_DB: oauth2_auth
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    networks:
+      - oauth2-network
+
+  # Optional: Redis for caching
+  redis:
+    image: redis:6-alpine
+    container_name: oauth2-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - oauth2-network
+
+volumes:
+  postgres_data:
+
+networks:
+  oauth2-network:
+    driver: bridge
+

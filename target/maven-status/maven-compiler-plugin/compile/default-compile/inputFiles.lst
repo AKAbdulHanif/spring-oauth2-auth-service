@@ -1,0 +1,9 @@
+/home/ubuntu/spring-auth-demo/src/main/java/com/natwest/platform/auth/service/JwtService.java
+/home/ubuntu/spring-auth-demo/src/main/java/com/natwest/platform/auth/repository/OAuth2ClientRepository.java
+/home/ubuntu/spring-auth-demo/src/main/java/com/natwest/platform/auth/controller/OAuth2Controller.java
+/home/ubuntu/spring-auth-demo/src/main/java/com/natwest/platform/auth/AuthServerDemoApplication.java
+/home/ubuntu/spring-auth-demo/src/main/java/com/natwest/platform/auth/entity/OAuth2Client.java
+/home/ubuntu/spring-auth-demo/src/main/java/com/natwest/platform/auth/config/SecurityConfig.java
+/home/ubuntu/spring-auth-demo/src/main/java/com/natwest/platform/auth/controller/ManagementController.java
+/home/ubuntu/spring-auth-demo/src/main/java/com/natwest/platform/auth/controller/ClientRegistrationController.java
+/home/ubuntu/spring-auth-demo/src/main/java/com/natwest/platform/auth/service/OAuth2Service.java

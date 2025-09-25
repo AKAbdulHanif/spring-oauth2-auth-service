@@ -1,0 +1,134 @@
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 16px; fill: #7f8c8d; }
+      .component { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: white; }
+      .description { font-family: Arial, sans-serif; font-size: 12px; fill: white; }
+      .external-system { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .internal-system { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .core-system { fill: #27ae60; stroke: #229954; stroke-width: 3; }
+      .database { fill: #f39c12; stroke: #e67e22; stroke-width: 2; }
+      .flow-arrow { stroke: #34495e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .flow-label { font-family: Arial, sans-serif; font-size: 11px; fill: #2c3e50; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#34495e" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" class="title">OAuth2 Authorization Service - System Context</text>
+  <text x="600" y="55" text-anchor="middle" class="subtitle">High-level view of the OAuth2 authorization ecosystem</text>
+  
+  <!-- External Systems -->
+  <g id="external-systems">
+    <!-- Client Applications -->
+    <rect x="50" y="150" width="200" height="120" rx="10" class="external-system"/>
+    <text x="150" y="180" text-anchor="middle" class="component">Client Applications</text>
+    <text x="150" y="200" text-anchor="middle" class="description">• Web Applications</text>
+    <text x="150" y="215" text-anchor="middle" class="description">• Mobile Apps</text>
+    <text x="150" y="230" text-anchor="middle" class="description">• Third-party Services</text>
+    <text x="150" y="245" text-anchor="middle" class="description">• Microservices</text>
+    
+    <!-- API Gateway -->
+    <rect x="950" y="150" width="200" height="120" rx="10" class="external-system"/>
+    <text x="1050" y="180" text-anchor="middle" class="component">API Gateway</text>
+    <text x="1050" y="200" text-anchor="middle" class="description">• Load Balancing</text>
+    <text x="1050" y="215" text-anchor="middle" class="description">• Rate Limiting</text>
+    <text x="1050" y="230" text-anchor="middle" class="description">• SSL Termination</text>
+    <text x="1050" y="245" text-anchor="middle" class="description">• Request Routing</text>
+    
+    <!-- Downstream Services -->
+    <rect x="950" y="450" width="200" height="120" rx="10" class="external-system"/>
+    <text x="1050" y="480" text-anchor="middle" class="component">Downstream Services</text>
+    <text x="1050" y="500" text-anchor="middle" class="description">• Banking APIs</text>
+    <text x="1050" y="515" text-anchor="middle" class="description">• Payment Services</text>
+    <text x="1050" y="530" text-anchor="middle" class="description">• Account Services</text>
+    <text x="1050" y="545" text-anchor="middle" class="description">• Audit Services</text>
+  </g>
+  
+  <!-- Core System -->
+  <g id="core-system">
+    <rect x="400" y="300" width="400" height="200" rx="15" class="core-system"/>
+    <text x="600" y="330" text-anchor="middle" class="component" style="font-size: 18px;">OAuth2 Authorization Service</text>
+    
+    <!-- Core Components -->
+    <rect x="420" y="350" width="160" height="60" rx="5" class="internal-system"/>
+    <text x="500" y="370" text-anchor="middle" class="component" style="font-size: 12px;">OAuth2/OIDC Engine</text>
+    <text x="500" y="385" text-anchor="middle" class="description" style="font-size: 10px;">Token Generation</text>
+    <text x="500" y="395" text-anchor="middle" class="description" style="font-size: 10px;">JWT Validation</text>
+    
+    <rect x="620" y="350" width="160" height="60" rx="5" class="internal-system"/>
+    <text x="700" y="370" text-anchor="middle" class="component" style="font-size: 12px;">Client Management</text>
+    <text x="700" y="385" text-anchor="middle" class="description" style="font-size: 10px;">Registration</text>
+    <text x="700" y="395" text-anchor="middle" class="description" style="font-size: 10px;">Lifecycle</text>
+    
+    <rect x="420" y="420" width="160" height="60" rx="5" class="internal-system"/>
+    <text x="500" y="440" text-anchor="middle" class="component" style="font-size: 12px;">Multi-Tenant Mgmt</text>
+    <text x="500" y="455" text-anchor="middle" class="description" style="font-size: 10px;">Tenant Isolation</text>
+    <text x="500" y="465" text-anchor="middle" class="description" style="font-size: 10px;">Scope Control</text>
+    
+    <rect x="620" y="420" width="160" height="60" rx="5" class="internal-system"/>
+    <text x="700" y="440" text-anchor="middle" class="component" style="font-size: 12px;">Security Layer</text>
+    <text x="700" y="455" text-anchor="middle" class="description" style="font-size: 10px;">Authentication</text>
+    <text x="700" y="465" text-anchor="middle" class="description" style="font-size: 10px;">Authorization</text>
+  </g>
+  
+  <!-- Database -->
+  <g id="database">
+    <rect x="500" y="600" width="200" height="100" rx="10" class="database"/>
+    <text x="600" y="630" text-anchor="middle" class="component">Data Layer</text>
+    <text x="600" y="650" text-anchor="middle" class="description">• H2 (Development)</text>
+    <text x="600" y="665" text-anchor="middle" class="description">• PostgreSQL (Production)</text>
+    <text x="600" y="680" text-anchor="middle" class="description">• Redis (Optional Cache)</text>
+  </g>
+  
+  <!-- Flows -->
+  <g id="flows">
+    <!-- Client to OAuth2 Service -->
+    <path d="M 250 210 Q 325 210 400 350" class="flow-arrow"/>
+    <text x="320" y="270" class="flow-label">1. Request Token</text>
+    <text x="320" y="285" class="flow-label">(Client Credentials)</text>
+    
+    <path d="M 400 380 Q 325 380 250 240" class="flow-arrow"/>
+    <text x="320" y="340" class="flow-label">2. JWT Token</text>
+    
+    <!-- OAuth2 Service to Database -->
+    <path d="M 600 500 L 600 600" class="flow-arrow"/>
+    <text x="620" y="550" class="flow-label">Client Data</text>
+    
+    <!-- API Gateway flows -->
+    <path d="M 950 210 Q 875 210 800 350" class="flow-arrow"/>
+    <text x="870" y="270" class="flow-label">3. Validate Token</text>
+    
+    <path d="M 800 380 Q 875 380 950 240" class="flow-arrow"/>
+    <text x="870" y="340" class="flow-label">4. Token Valid</text>
+    
+    <!-- API Gateway to Downstream -->
+    <path d="M 1050 270 L 1050 450" class="flow-arrow"/>
+    <text x="1070" y="360" class="flow-label">5. Authorized</text>
+    <text x="1070" y="375" class="flow-label">Request</text>
+  </g>
+  
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="50" y="600" width="300" height="150" rx="5" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+    <text x="200" y="620" text-anchor="middle" class="component" style="fill: #2c3e50;">Legend</text>
+    
+    <rect x="70" y="635" width="20" height="15" class="external-system"/>
+    <text x="100" y="647" class="flow-label">External Systems</text>
+    
+    <rect x="70" y="655" width="20" height="15" class="core-system"/>
+    <text x="100" y="667" class="flow-label">Core OAuth2 Service</text>
+    
+    <rect x="70" y="675" width="20" height="15" class="internal-system"/>
+    <text x="100" y="687" class="flow-label">Internal Components</text>
+    
+    <rect x="70" y="695" width="20" height="15" class="database"/>
+    <text x="100" y="707" class="flow-label">Data Storage</text>
+    
+    <path d="M 70 720 L 90 720" class="flow-arrow"/>
+    <text x="100" y="725" class="flow-label">Data/Control Flow</text>
+  </g>
+</svg>

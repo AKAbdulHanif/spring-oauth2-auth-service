@@ -1,0 +1,14 @@
+com/natwest/platform/auth/controller/OAuth2Controller.class
+com/natwest/platform/auth/controller/ManagementController.class
+com/natwest/platform/auth/entity/OAuth2Client$ClientStatus.class
+com/natwest/platform/auth/config/SecurityConfig.class
+com/natwest/platform/auth/controller/ManagementController$RegistrationRequest.class
+com/natwest/platform/auth/entity/OAuth2Client.class
+com/natwest/platform/auth/AuthServerDemoApplication.class
+com/natwest/platform/auth/controller/ManagementController$RegistrationResponse.class
+com/natwest/platform/auth/service/JwtService.class
+com/natwest/platform/auth/controller/ClientRegistrationController.class
+com/natwest/platform/auth/repository/OAuth2ClientRepository.class
+com/natwest/platform/auth/service/OAuth2Service.class
+com/natwest/platform/auth/controller/ClientRegistrationController$ClientRegistrationRequest.class
+com/natwest/platform/auth/controller/ClientRegistrationController$ClientRegistrationResponse.class

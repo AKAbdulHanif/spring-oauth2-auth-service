@@ -1,0 +1,200 @@
+<svg width="1400" height="900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 16px; fill: #7f8c8d; }
+      .actor { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: white; }
+      .step-text { font-family: Arial, sans-serif; font-size: 12px; fill: #2c3e50; }
+      .step-detail { font-family: Arial, sans-serif; font-size: 10px; fill: #7f8c8d; }
+      .client { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .auth-server { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .resource-server { fill: #27ae60; stroke: #229954; stroke-width: 2; }
+      .database { fill: #f39c12; stroke: #e67e22; stroke-width: 2; }
+      .flow-arrow { stroke: #34495e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .return-arrow { stroke: #8e44ad; stroke-width: 2; fill: none; marker-end: url(#arrowhead-purple); stroke-dasharray: 5,5; }
+      .step-number { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; fill: white; }
+      .step-circle { fill: #34495e; stroke: #2c3e50; stroke-width: 2; }
+      .return-circle { fill: #8e44ad; stroke: #7d3c98; stroke-width: 2; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#34495e" />
+    </marker>
+    <marker id="arrowhead-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8e44ad" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="700" y="30" text-anchor="middle" class="title">OAuth2 Client Credentials Flow - Sequence Diagram</text>
+  <text x="700" y="55" text-anchor="middle" class="subtitle">Complete token generation and resource access flow</text>
+  
+  <!-- Actors -->
+  <g id="actors">
+    <!-- Client Application -->
+    <rect x="100" y="100" width="120" height="60" rx="10" class="client"/>
+    <text x="160" y="125" text-anchor="middle" class="actor">Client</text>
+    <text x="160" y="140" text-anchor="middle" class="actor">Application</text>
+    <text x="160" y="155" text-anchor="middle" class="step-detail">retail-payment-service</text>
+    
+    <!-- OAuth2 Authorization Server -->
+    <rect x="400" y="100" width="120" height="60" rx="10" class="auth-server"/>
+    <text x="460" y="125" text-anchor="middle" class="actor">OAuth2</text>
+    <text x="460" y="140" text-anchor="middle" class="actor">Auth Server</text>
+    <text x="460" y="155" text-anchor="middle" class="step-detail">OAuth2 Platform</text>
+    
+    <!-- Database -->
+    <rect x="700" y="100" width="120" height="60" rx="10" class="database"/>
+    <text x="760" y="125" text-anchor="middle" class="actor">Client</text>
+    <text x="760" y="140" text-anchor="middle" class="actor">Database</text>
+    <text x="760" y="155" text-anchor="middle" class="step-detail">H2/PostgreSQL</text>
+    
+    <!-- Resource Server -->
+    <rect x="1000" y="100" width="120" height="60" rx="10" class="resource-server"/>
+    <text x="1060" y="125" text-anchor="middle" class="actor">Resource</text>
+    <text x="1060" y="140" text-anchor="middle" class="actor">Server</text>
+    <text x="1060" y="155" text-anchor="middle" class="step-detail">Banking API</text>
+    
+    <!-- Lifelines -->
+    <line x1="160" y1="160" x2="160" y2="800" stroke="#bdc3c7" stroke-width="2" stroke-dasharray="5,5"/>
+    <line x1="460" y1="160" x2="460" y2="800" stroke="#bdc3c7" stroke-width="2" stroke-dasharray="5,5"/>
+    <line x1="760" y1="160" x2="760" y2="800" stroke="#bdc3c7" stroke-width="2" stroke-dasharray="5,5"/>
+    <line x1="1060" y1="160" x2="1060" y2="800" stroke="#bdc3c7" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+  
+  <!-- Token Generation Flow -->
+  <g id="token-flow">
+    <!-- Step 1: Client Credentials Request -->
+    <circle cx="50" cy="200" r="15" class="step-circle"/>
+    <text x="50" y="205" text-anchor="middle" class="step-number">1</text>
+    <path d="M 160 200 L 450 200" class="flow-arrow"/>
+    <text x="305" y="190" text-anchor="middle" class="step-text">POST /oauth2/token</text>
+    <text x="305" y="215" text-anchor="middle" class="step-detail">grant_type=client_credentials</text>
+    <text x="305" y="225" text-anchor="middle" class="step-detail">client_id=retail-payment-service</text>
+    <text x="305" y="235" text-anchor="middle" class="step-detail">client_secret=payment-secret-2024</text>
+    <text x="305" y="245" text-anchor="middle" class="step-detail">scope=read:accounts,write:transactions</text>
+    
+    <!-- Step 2: Validate Client Credentials -->
+    <circle cx="50" cy="280" r="15" class="step-circle"/>
+    <text x="50" y="285" text-anchor="middle" class="step-number">2</text>
+    <path d="M 460 280 L 750 280" class="flow-arrow"/>
+    <text x="605" y="270" text-anchor="middle" class="step-text">Validate Client Credentials</text>
+    <text x="605" y="295" text-anchor="middle" class="step-detail">SELECT * FROM oauth2_client WHERE client_id = ?</text>
+    
+    <!-- Step 3: Database Response -->
+    <circle cx="1350" cy="320" r="15" class="return-circle"/>
+    <text x="1350" y="325" text-anchor="middle" class="step-number">3</text>
+    <path d="M 750 320 L 470 320" class="return-arrow"/>
+    <text x="610" y="310" text-anchor="middle" class="step-text">Client Record Found</text>
+    <text x="610" y="335" text-anchor="middle" class="step-detail">status=ACTIVE, tenantId=retail-banking</text>
+    
+    <!-- Step 4: Verify Client Secret -->
+    <circle cx="50" cy="360" r="15" class="step-circle"/>
+    <text x="50" y="365" text-anchor="middle" class="step-number">4</text>
+    <rect x="400" y="350" width="120" height="20" rx="5" fill="#ecf0f1" stroke="#bdc3c7"/>
+    <text x="460" y="365" text-anchor="middle" class="step-text">BCrypt.checkpw(secret, hash)</text>
+    
+    <!-- Step 5: Validate Scopes -->
+    <circle cx="50" cy="400" r="15" class="step-circle"/>
+    <text x="50" y="405" text-anchor="middle" class="step-number">5</text>
+    <rect x="400" y="390" width="120" height="20" rx="5" fill="#ecf0f1" stroke="#bdc3c7"/>
+    <text x="460" y="405" text-anchor="middle" class="step-text">Validate & Filter Scopes</text>
+    
+    <!-- Step 6: Generate JWT Token -->
+    <circle cx="50" cy="440" r="15" class="step-circle"/>
+    <text x="50" y="445" text-anchor="middle" class="step-number">6</text>
+    <rect x="400" y="430" width="120" height="20" rx="5" fill="#ecf0f1" stroke="#bdc3c7"/>
+    <text x="460" y="445" text-anchor="middle" class="step-text">Generate JWT Token</text>
+    
+    <!-- Step 7: Update Last Used Timestamp -->
+    <circle cx="50" cy="480" r="15" class="step-circle"/>
+    <text x="50" y="485" text-anchor="middle" class="step-number">7</text>
+    <path d="M 460 480 L 750 480" class="flow-arrow"/>
+    <text x="605" y="470" text-anchor="middle" class="step-text">Update Last Used</text>
+    <text x="605" y="495" text-anchor="middle" class="step-detail">UPDATE oauth2_client SET last_used_at = NOW()</text>
+    
+    <!-- Step 8: Return Access Token -->
+    <circle cx="1350" cy="520" r="15" class="return-circle"/>
+    <text x="1350" y="525" text-anchor="middle" class="step-number">8</text>
+    <path d="M 450 520 L 170 520" class="return-arrow"/>
+    <text x="310" y="510" text-anchor="middle" class="step-text">HTTP 200 - Access Token</text>
+    <text x="310" y="535" text-anchor="middle" class="step-detail">{"access_token": "eyJhbGciOiJIUzI1NiIs...",</text>
+    <text x="310" y="545" text-anchor="middle" class="step-detail">"token_type": "Bearer", "expires_in": 3600}</text>
+  </g>
+  
+  <!-- Resource Access Flow -->
+  <g id="resource-flow">
+    <!-- Step 9: API Request with Token -->
+    <circle cx="50" cy="600" r="15" class="step-circle"/>
+    <text x="50" y="605" text-anchor="middle" class="step-number">9</text>
+    <path d="M 160 600 L 1050 600" class="flow-arrow"/>
+    <text x="605" y="590" text-anchor="middle" class="step-text">GET /api/accounts</text>
+    <text x="605" y="615" text-anchor="middle" class="step-detail">Authorization: Bearer eyJhbGciOiJIUzI1NiIs...</text>
+    
+    <!-- Step 10: Token Validation -->
+    <circle cx="50" cy="640" r="15" class="step-circle"/>
+    <text x="50" y="645" text-anchor="middle" class="step-number">10</text>
+    <path d="M 1060 640 L 470 640" class="flow-arrow"/>
+    <text x="765" y="630" text-anchor="middle" class="step-text">POST /oauth2/introspect</text>
+    <text x="765" y="655" text-anchor="middle" class="step-detail">token=eyJhbGciOiJIUzI1NiIs...</text>
+    
+    <!-- Step 11: Token Introspection Response -->
+    <circle cx="1350" cy="680" r="15" class="return-circle"/>
+    <text x="1350" y="685" text-anchor="middle" class="step-number">11</text>
+    <path d="M 470 680 L 1050 680" class="return-arrow"/>
+    <text x="760" y="670" text-anchor="middle" class="step-text">Token Valid</text>
+    <text x="760" y="695" text-anchor="middle" class="step-detail">{"active": true, "client_id": "retail-payment-service",</text>
+    <text x="760" y="705" text-anchor="middle" class="step-detail">"scope": "read:accounts", "exp": 1640998800}</text>
+    
+    <!-- Step 12: Resource Response -->
+    <circle cx="1350" cy="740" r="15" class="return-circle"/>
+    <text x="1350" y="745" text-anchor="middle" class="step-number">12</text>
+    <path d="M 1050 740 L 170 740" class="return-arrow"/>
+    <text x="610" y="730" text-anchor="middle" class="step-text">HTTP 200 - Account Data</text>
+    <text x="610" y="755" text-anchor="middle" class="step-detail">{"accounts": [{"id": "12345", "balance": 1000.00}]}</text>
+  </g>
+  
+  <!-- JWT Token Structure -->
+  <g id="jwt-structure">
+    <rect x="50" y="820" width="600" height="60" rx="5" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+    <text x="350" y="840" text-anchor="middle" class="step-text" style="font-weight: bold;">JWT Token Structure</text>
+    <text x="70" y="860" class="step-detail">Header: {"alg": "HS256", "typ": "JWT"}</text>
+    <text x="70" y="870" class="step-detail">Payload: {"sub": "retail-payment-service", "iss": "oauth2-auth-server", "client_id": "retail-payment-service",</text>
+    <text x="70" y="880" class="step-detail">"tenant_id": "retail-banking", "scope": "read:accounts,write:transactions", "exp": 1640998800}</text>
+  </g>
+  
+  <!-- Error Scenarios -->
+  <g id="error-scenarios">
+    <rect x="700" y="820" width="650" height="60" rx="5" fill="#fadbd8" stroke="#e74c3c" stroke-width="1"/>
+    <text x="1025" y="840" text-anchor="middle" class="step-text" style="font-weight: bold; fill: #c0392b;">Common Error Scenarios</text>
+    <text x="720" y="860" class="step-detail" style="fill: #c0392b;">• Invalid client_id/client_secret → HTTP 401 Unauthorized</text>
+    <text x="720" y="870" class="step-detail" style="fill: #c0392b;">• Invalid scope → HTTP 400 Bad Request ("invalid_scope")</text>
+    <text x="720" y="880" class="step-detail" style="fill: #c0392b;">• Expired/Invalid token → HTTP 401 Unauthorized</text>
+  </g>
+  
+  <!-- Flow Legend -->
+  <g id="legend">
+    <rect x="1200" y="200" width="180" height="120" rx="5" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+    <text x="1290" y="220" text-anchor="middle" class="step-text" style="font-weight: bold;">Flow Legend</text>
+    
+    <circle cx="1220" cy="240" r="8" class="step-circle"/>
+    <text x="1220" y="245" text-anchor="middle" class="step-number" style="font-size: 10px;">N</text>
+    <text x="1240" y="245" class="step-detail">Request Flow</text>
+    
+    <circle cx="1220" cy="260" r="8" class="return-circle"/>
+    <text x="1220" y="265" text-anchor="middle" class="step-number" style="font-size: 10px;">N</text>
+    <text x="1240" y="265" class="step-detail">Response Flow</text>
+    
+    <path d="M 1220 280 L 1240 280" class="flow-arrow"/>
+    <text x="1250" y="285" class="step-detail">Synchronous Call</text>
+    
+    <path d="M 1220 300 L 1240 300" class="return-arrow"/>
+    <text x="1250" y="305" class="step-detail">Response/Return</text>
+  </g>
+  
+  <!-- Security Notes -->
+  <g id="security-notes">
+    <rect x="50" y="900" width="1300" height="40" rx="5" fill="#d5f4e6" stroke="#27ae60" stroke-width="1"/>
+    <text x="700" y="920" text-anchor="middle" class="step-text" style="font-weight: bold; fill: #229954;">Security Features</text>
+    <text x="70" y="935" class="step-detail" style="fill: #229954;">• JWT tokens are stateless and self-contained • HMAC-SHA256 signature prevents tampering • Configurable token expiration • Tenant-based scope isolation • BCrypt password hashing • Client status validation</text>
+  </g>
+</svg>

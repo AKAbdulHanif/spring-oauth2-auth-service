@@ -1,0 +1,343 @@
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 16px; fill: #7f8c8d; }
+      .table-name { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: white; }
+      .field-name { font-family: Arial, sans-serif; font-size: 12px; fill: #2c3e50; }
+      .field-type { font-family: Arial, sans-serif; font-size: 11px; fill: #7f8c8d; }
+      .constraint { font-family: Arial, sans-serif; font-size: 10px; fill: #e74c3c; font-style: italic; }
+      .section-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #2c3e50; }
+      .description { font-family: Arial, sans-serif; font-size: 11px; fill: #34495e; }
+      .entity-table { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .enum-table { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .dto-table { fill: #27ae60; stroke: #229954; stroke-width: 2; }
+      .field-bg { fill: #ecf0f1; stroke: #bdc3c7; stroke-width: 1; }
+      .pk-field { fill: #f39c12; stroke: #e67e22; stroke-width: 1; }
+      .unique-field { fill: #9b59b6; stroke: #8e44ad; stroke-width: 1; }
+      .relationship { stroke: #34495e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#34495e" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" class="title">OAuth2 Authorization Service - Data Model</text>
+  <text x="600" y="55" text-anchor="middle" class="subtitle">Database schema, entities, DTOs, and enumerations</text>
+  
+  <!-- Main Entity: OAuth2Client -->
+  <g id="oauth2-client-entity">
+    <rect x="100" y="100" width="300" height="25" rx="5" class="entity-table"/>
+    <text x="250" y="118" text-anchor="middle" class="table-name">OAuth2Client</text>
+    
+    <!-- Primary Key -->
+    <rect x="100" y="125" width="300" height="20" class="pk-field"/>
+    <text x="110" y="138" class="field-name">🔑 id</text>
+    <text x="380" y="138" text-anchor="end" class="field-type">Long</text>
+    <text x="110" y="148" class="constraint">PRIMARY KEY, AUTO_INCREMENT</text>
+    
+    <!-- Unique Fields -->
+    <rect x="100" y="150" width="300" height="20" class="unique-field"/>
+    <text x="110" y="163" class="field-name">🔒 clientId</text>
+    <text x="380" y="163" text-anchor="end" class="field-type">String(255)</text>
+    <text x="110" y="173" class="constraint">UNIQUE, NOT NULL</text>
+    
+    <!-- Regular Fields -->
+    <rect x="100" y="175" width="300" height="20" class="field-bg"/>
+    <text x="110" y="188" class="field-name">clientSecret</text>
+    <text x="380" y="188" text-anchor="end" class="field-type">String(255)</text>
+    <text x="110" y="198" class="constraint">NOT NULL, BCrypt hashed</text>
+    
+    <rect x="100" y="200" width="300" height="20" class="field-bg"/>
+    <text x="110" y="213" class="field-name">clientName</text>
+    <text x="380" y="213" text-anchor="end" class="field-type">String(255)</text>
+    <text x="110" y="223" class="constraint">NOT NULL</text>
+    
+    <rect x="100" y="225" width="300" height="20" class="field-bg"/>
+    <text x="110" y="238" class="field-name">tenantId</text>
+    <text x="380" y="238" text-anchor="end" class="field-type">String(100)</text>
+    <text x="110" y="248" class="constraint">NOT NULL, INDEX</text>
+    
+    <rect x="100" y="250" width="300" height="20" class="field-bg"/>
+    <text x="110" y="263" class="field-name">scopes</text>
+    <text x="380" y="263" text-anchor="end" class="field-type">String(1000)</text>
+    <text x="110" y="273" class="constraint">Comma-separated values</text>
+    
+    <rect x="100" y="275" width="300" height="20" class="field-bg"/>
+    <text x="110" y="288" class="field-name">accessTokenValiditySeconds</text>
+    <text x="380" y="288" text-anchor="end" class="field-type">Integer</text>
+    <text x="110" y="298" class="constraint">DEFAULT 3600 (1 hour)</text>
+    
+    <rect x="100" y="300" width="300" height="20" class="field-bg"/>
+    <text x="110" y="313" class="field-name">status</text>
+    <text x="380" y="313" text-anchor="end" class="field-type">ClientStatus</text>
+    <text x="110" y="323" class="constraint">ENUM, DEFAULT 'ACTIVE'</text>
+    
+    <rect x="100" y="325" width="300" height="20" class="field-bg"/>
+    <text x="110" y="338" class="field-name">createdAt</text>
+    <text x="380" y="338" text-anchor="end" class="field-type">Instant</text>
+    <text x="110" y="348" class="constraint">NOT NULL, DEFAULT NOW()</text>
+    
+    <rect x="100" y="350" width="300" height="20" class="field-bg"/>
+    <text x="110" y="363" class="field-name">lastUsedAt</text>
+    <text x="380" y="363" text-anchor="end" class="field-type">Instant</text>
+    <text x="110" y="373" class="constraint">NULLABLE, Updated on token generation</text>
+  </g>
+  
+  <!-- Enumerations -->
+  <g id="enumerations">
+    <!-- ClientStatus Enum -->
+    <rect x="500" y="100" width="200" height="25" rx="5" class="enum-table"/>
+    <text x="600" y="118" text-anchor="middle" class="table-name">ClientStatus (Enum)</text>
+    
+    <rect x="500" y="125" width="200" height="20" class="field-bg"/>
+    <text x="510" y="138" class="field-name">ACTIVE</text>
+    <text x="690" y="138" text-anchor="end" class="description">Client is active and can request tokens</text>
+    
+    <rect x="500" y="145" width="200" height="20" class="field-bg"/>
+    <text x="510" y="158" class="field-name">INACTIVE</text>
+    <text x="690" y="158" text-anchor="end" class="description">Client is temporarily disabled</text>
+    
+    <rect x="500" y="165" width="200" height="20" class="field-bg"/>
+    <text x="510" y="178" class="field-name">SUSPENDED</text>
+    <text x="690" y="178" text-anchor="end" class="description">Client is suspended due to security issues</text>
+    
+    <rect x="500" y="185" width="200" height="20" class="field-bg"/>
+    <text x="510" y="198" class="field-name">DELETED</text>
+    <text x="690" y="198" text-anchor="end" class="description">Client is marked for deletion</text>
+    
+    <!-- GrantType Enum -->
+    <rect x="500" y="230" width="200" height="25" rx="5" class="enum-table"/>
+    <text x="600" y="248" text-anchor="middle" class="table-name">GrantType (Enum)</text>
+    
+    <rect x="500" y="255" width="200" height="20" class="field-bg"/>
+    <text x="510" y="268" class="field-name">CLIENT_CREDENTIALS</text>
+    <text x="690" y="268" text-anchor="end" class="description">Machine-to-machine authentication</text>
+    
+    <rect x="500" y="275" width="200" height="20" class="field-bg"/>
+    <text x="510" y="288" class="field-name">AUTHORIZATION_CODE</text>
+    <text x="690" y="288" text-anchor="end" class="description">Future: Web application flow</text>
+    
+    <rect x="500" y="295" width="200" height="20" class="field-bg"/>
+    <text x="510" y="308" class="field-name">REFRESH_TOKEN</text>
+    <text x="690" y="308" text-anchor="end" class="description">Future: Token refresh capability</text>
+    
+    <!-- TokenType Enum -->
+    <rect x="500" y="340" width="200" height="25" rx="5" class="enum-table"/>
+    <text x="600" y="358" text-anchor="middle" class="table-name">TokenType (Enum)</text>
+    
+    <rect x="500" y="365" width="200" height="20" class="field-bg"/>
+    <text x="510" y="378" class="field-name">BEARER</text>
+    <text x="690" y="378" text-anchor="end" class="description">Bearer token type (RFC 6750)</text>
+    
+    <rect x="500" y="385" width="200" height="20" class="field-bg"/>
+    <text x="510" y="398" class="field-name">MAC</text>
+    <text x="690" y="398" text-anchor="end" class="description">Future: MAC token type</text>
+  </g>
+  
+  <!-- DTOs -->
+  <g id="dtos">
+    <!-- ClientRegistrationRequest DTO -->
+    <rect x="800" y="100" width="300" height="25" rx="5" class="dto-table"/>
+    <text x="950" y="118" text-anchor="middle" class="table-name">ClientRegistrationRequest (DTO)</text>
+    
+    <rect x="800" y="125" width="300" height="20" class="field-bg"/>
+    <text x="810" y="138" class="field-name">clientName</text>
+    <text x="1080" y="138" text-anchor="end" class="field-type">String</text>
+    <text x="810" y="148" class="constraint">@NotBlank, @Size(max=255)</text>
+    
+    <rect x="800" y="150" width="300" height="20" class="field-bg"/>
+    <text x="810" y="163" class="field-name">tenantId</text>
+    <text x="1080" y="163" text-anchor="end" class="field-type">String</text>
+    <text x="810" y="173" class="constraint">@NotBlank, @Size(max=100)</text>
+    
+    <rect x="800" y="175" width="300" height="20" class="field-bg"/>
+    <text x="810" y="188" class="field-name">scopes</text>
+    <text x="1080" y="188" text-anchor="end" class="field-type">List&lt;String&gt;</text>
+    <text x="810" y="198" class="constraint">@NotEmpty, Valid scope values</text>
+    
+    <rect x="800" y="200" width="300" height="20" class="field-bg"/>
+    <text x="810" y="213" class="field-name">description</text>
+    <text x="1080" y="213" text-anchor="end" class="field-type">String</text>
+    <text x="810" y="223" class="constraint">@Size(max=500), Optional</text>
+    
+    <rect x="800" y="225" width="300" height="20" class="field-bg"/>
+    <text x="810" y="238" class="field-name">contactEmail</text>
+    <text x="1080" y="238" text-anchor="end" class="field-type">String</text>
+    <text x="810" y="248" class="constraint">@Email, Optional</text>
+    
+    <!-- TokenResponse DTO -->
+    <rect x="800" y="280" width="300" height="25" rx="5" class="dto-table"/>
+    <text x="950" y="298" text-anchor="middle" class="table-name">TokenResponse (DTO)</text>
+    
+    <rect x="800" y="305" width="300" height="20" class="field-bg"/>
+    <text x="810" y="318" class="field-name">access_token</text>
+    <text x="1080" y="318" text-anchor="end" class="field-type">String</text>
+    <text x="810" y="328" class="constraint">JWT token</text>
+    
+    <rect x="800" y="330" width="300" height="20" class="field-bg"/>
+    <text x="810" y="343" class="field-name">token_type</text>
+    <text x="1080" y="343" text-anchor="end" class="field-type">String</text>
+    <text x="810" y="353" class="constraint">Always "Bearer"</text>
+    
+    <rect x="800" y="355" width="300" height="20" class="field-bg"/>
+    <text x="810" y="368" class="field-name">expires_in</text>
+    <text x="1080" y="368" text-anchor="end" class="field-type">Integer</text>
+    <text x="810" y="378" class="constraint">Seconds until expiration</text>
+    
+    <rect x="800" y="380" width="300" height="20" class="field-bg"/>
+    <text x="810" y="393" class="field-name">scope</text>
+    <text x="1080" y="393" text-anchor="end" class="field-type">String</text>
+    <text x="810" y="403" class="constraint">Space-separated scopes</text>
+    
+    <!-- IntrospectionResponse DTO -->
+    <rect x="800" y="430" width="300" height="25" rx="5" class="dto-table"/>
+    <text x="950" y="448" text-anchor="middle" class="table-name">IntrospectionResponse (DTO)</text>
+    
+    <rect x="800" y="455" width="300" height="20" class="field-bg"/>
+    <text x="810" y="468" class="field-name">active</text>
+    <text x="1080" y="468" text-anchor="end" class="field-type">Boolean</text>
+    <text x="810" y="478" class="constraint">Token validity status</text>
+    
+    <rect x="800" y="480" width="300" height="20" class="field-bg"/>
+    <text x="810" y="493" class="field-name">client_id</text>
+    <text x="1080" y="493" text-anchor="end" class="field-type">String</text>
+    <text x="810" y="503" class="constraint">Client identifier</text>
+    
+    <rect x="800" y="505" width="300" height="20" class="field-bg"/>
+    <text x="810" y="518" class="field-name">scope</text>
+    <text x="1080" y="518" text-anchor="end" class="field-type">String</text>
+    <text x="810" y="528" class="constraint">Granted scopes</text>
+    
+    <rect x="800" y="530" width="300" height="20" class="field-bg"/>
+    <text x="810" y="543" class="field-name">exp</text>
+    <text x="1080" y="543" text-anchor="end" class="field-type">Long</text>
+    <text x="810" y="553" class="constraint">Expiration timestamp</text>
+    
+    <rect x="800" y="555" width="300" height="20" class="field-bg"/>
+    <text x="810" y="568" class="field-name">tenant_id</text>
+    <text x="1080" y="568" text-anchor="end" class="field-type">String</text>
+    <text x="810" y="578" class="constraint">Tenant identifier</text>
+  </g>
+  
+  <!-- Database Indexes -->
+  <g id="indexes">
+    <rect x="100" y="420" width="300" height="25" rx="5" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+    <text x="250" y="438" text-anchor="middle" class="table-name">Database Indexes</text>
+    
+    <rect x="100" y="445" width="300" height="20" class="field-bg"/>
+    <text x="110" y="458" class="field-name">idx_client_id</text>
+    <text x="380" y="458" text-anchor="end" class="field-type">UNIQUE (clientId)</text>
+    
+    <rect x="100" y="465" width="300" height="20" class="field-bg"/>
+    <text x="110" y="478" class="field-name">idx_tenant_id</text>
+    <text x="380" y="478" text-anchor="end" class="field-type">INDEX (tenantId)</text>
+    
+    <rect x="100" y="485" width="300" height="20" class="field-bg"/>
+    <text x="110" y="498" class="field-name">idx_status</text>
+    <text x="380" y="498" text-anchor="end" class="field-type">INDEX (status)</text>
+    
+    <rect x="100" y="505" width="300" height="20" class="field-bg"/>
+    <text x="110" y="518" class="field-name">idx_tenant_status</text>
+    <text x="380" y="518" text-anchor="end" class="field-type">COMPOSITE (tenantId, status)</text>
+    
+    <rect x="100" y="525" width="300" height="20" class="field-bg"/>
+    <text x="110" y="538" class="field-name">idx_created_at</text>
+    <text x="380" y="538" text-anchor="end" class="field-type">INDEX (createdAt)</text>
+    
+    <rect x="100" y="545" width="300" height="20" class="field-bg"/>
+    <text x="110" y="558" class="field-name">idx_last_used_at</text>
+    <text x="380" y="558" text-anchor="end" class="field-type">INDEX (lastUsedAt)</text>
+  </g>
+  
+  <!-- Sample Data -->
+  <g id="sample-data">
+    <rect x="500" y="450" width="250" height="25" rx="5" fill="#8e44ad" stroke="#7d3c98" stroke-width="2"/>
+    <text x="625" y="468" text-anchor="middle" class="table-name">Sample Tenant Data</text>
+    
+    <rect x="500" y="475" width="250" height="20" class="field-bg"/>
+    <text x="510" y="488" class="field-name">retail-banking</text>
+    <text x="740" y="488" text-anchor="end" class="description">Retail banking services</text>
+    
+    <rect x="500" y="495" width="250" height="20" class="field-bg"/>
+    <text x="510" y="508" class="field-name">corporate-banking</text>
+    <text x="740" y="508" text-anchor="end" class="description">Corporate banking services</text>
+    
+    <rect x="500" y="515" width="250" height="20" class="field-bg"/>
+    <text x="510" y="528" class="field-name">platform</text>
+    <text x="740" y="528" text-anchor="end" class="description">Platform-wide services</text>
+    
+    <rect x="500" y="550" width="250" height="25" rx="5" fill="#8e44ad" stroke="#7d3c98" stroke-width="2"/>
+    <text x="625" y="568" text-anchor="middle" class="table-name">Sample Scope Data</text>
+    
+    <rect x="500" y="575" width="250" height="20" class="field-bg"/>
+    <text x="510" y="588" class="field-name">read:accounts</text>
+    <text x="740" y="588" text-anchor="end" class="description">Read account information</text>
+    
+    <rect x="500" y="595" width="250" height="20" class="field-bg"/>
+    <text x="510" y="608" class="field-name">write:transactions</text>
+    <text x="740" y="608" text-anchor="end" class="description">Create transactions</text>
+    
+    <rect x="500" y="615" width="250" height="20" class="field-bg"/>
+    <text x="510" y="628" class="field-name">read:audit</text>
+    <text x="740" y="628" text-anchor="end" class="description">Access audit logs</text>
+    
+    <rect x="500" y="635" width="250" height="20" class="field-bg"/>
+    <text x="510" y="648" class="field-name">admin:clients</text>
+    <text x="740" y="648" text-anchor="end" class="description">Manage client registrations</text>
+  </g>
+  
+  <!-- Relationships -->
+  <g id="relationships">
+    <!-- OAuth2Client to ClientStatus -->
+    <path d="M 400 313 L 500 158" class="relationship"/>
+    <text x="450" y="230" class="description" style="font-size: 10px;">uses</text>
+  </g>
+  
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="50" y="600" width="400" height="150" rx="5" fill="#f8f9fa" stroke="#6c757d" stroke-width="1"/>
+    <text x="250" y="620" text-anchor="middle" class="section-title">Data Model Legend</text>
+    
+    <rect x="70" y="635" width="15" height="10" class="pk-field"/>
+    <text x="95" y="645" class="description">Primary Key Field</text>
+    
+    <rect x="70" y="655" width="15" height="10" class="unique-field"/>
+    <text x="95" y="665" class="description">Unique Constraint Field</text>
+    
+    <rect x="70" y="675" width="15" height="10" class="field-bg"/>
+    <text x="95" y="685" class="description">Regular Field</text>
+    
+    <rect x="220" y="635" width="15" height="10" class="entity-table"/>
+    <text x="245" y="645" class="description">JPA Entity</text>
+    
+    <rect x="220" y="655" width="15" height="10" class="enum-table"/>
+    <text x="245" y="665" class="description">Enumeration</text>
+    
+    <rect x="220" y="675" width="15" height="10" class="dto-table"/>
+    <text x="245" y="685" class="description">Data Transfer Object</text>
+    
+    <text x="70" y="710" class="description" style="font-weight: bold;">Validation Annotations:</text>
+    <text x="70" y="725" class="description">@NotNull, @NotBlank, @Size, @Email, @Valid</text>
+    <text x="70" y="740" class="description">@Column, @Table, @Entity, @Enumerated</text>
+  </g>
+  
+  <!-- SQL DDL Example -->
+  <g id="sql-ddl">
+    <rect x="500" y="680" width="650" height="70" rx="5" fill="#2c3e50" stroke="#34495e" stroke-width="1"/>
+    <text x="825" y="700" text-anchor="middle" class="table-name">Sample DDL (PostgreSQL)</text>
+    <text x="520" y="720" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">CREATE TABLE oauth2_client (</text>
+    <text x="520" y="735" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">  id BIGSERIAL PRIMARY KEY,</text>
+    <text x="520" y="750" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">  client_id VARCHAR(255) UNIQUE NOT NULL,</text>
+    <text x="520" y="765" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">  client_secret VARCHAR(255) NOT NULL,</text>
+    <text x="520" y="780" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">  tenant_id VARCHAR(100) NOT NULL,</text>
+    <text x="520" y="795" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">  status VARCHAR(20) DEFAULT 'ACTIVE'</text>
+    <text x="1120" y="720" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">client_name VARCHAR(255) NOT NULL,</text>
+    <text x="1120" y="735" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">scopes TEXT,</text>
+    <text x="1120" y="750" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">access_token_validity_seconds INTEGER DEFAULT 3600,</text>
+    <text x="1120" y="765" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">created_at TIMESTAMP DEFAULT NOW(),</text>
+    <text x="1120" y="780" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">last_used_at TIMESTAMP</text>
+    <text x="1120" y="795" class="description" style="fill: #ecf0f1; font-family: monospace; font-size: 10px;">);</text>
+  </g>
+</svg>

@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oauth2-auth-ingress
+  namespace: oauth2-system
+  labels:
+    app: oauth2-auth-server
+    app.kubernetes.io/name: oauth2-auth-server
+    app.kubernetes.io/component: authorization-server
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  tls:
+  - hosts:
+    - auth.yourdomain.com
+    secretName: oauth2-auth-tls
+  rules:
+  - host: auth.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: oauth2-auth-service
+            port:
+              number: 80
+

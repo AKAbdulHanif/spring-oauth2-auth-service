@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth2-auth-server
+  namespace: oauth2-system
+  labels:
+    app: oauth2-auth-server
+    app.kubernetes.io/name: oauth2-auth-server
+    app.kubernetes.io/component: authorization-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: oauth2-auth-server
+  template:
+    metadata:
+      labels:
+        app: oauth2-auth-server
+        app.kubernetes.io/name: oauth2-auth-server
+        app.kubernetes.io/component: authorization-server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9000"
+        prometheus.io/path: "/auth/actuator/prometheus"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: oauth2-auth-server
+        image: oauth2-auth-server:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000
+          name: http
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "kubernetes"
+        - name: SERVER_PORT
+          value: "9000"
+        - name: JAVA_OPTS
+          value: "-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport"
+        livenessProbe:
+          httpGet:
+            path: /auth/api/health
+            port: 9000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /auth/api/health
+            port: 9000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /auth/api/health
+            port: 9000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 12
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+

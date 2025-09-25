@@ -1,0 +1,73 @@
+server:
+  port: 9000
+  servlet:
+    context-path: /auth
+
+spring:
+  application:
+    name: natwest-auth-server-demo
+  
+  # H2 Database Configuration (In-Memory for Demo)
+  datasource:
+    url: jdbc:h2:mem:authdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+  
+  # H2 Console (for debugging)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# Management and Monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# Logging Configuration
+logging:
+  level:
+    com.natwest.platform.auth: INFO
+    org.springframework.security: WARN
+    org.springframework.web: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Custom Application Properties
+natwest:
+  auth:
+    # JWT Configuration
+    jwt:
+      secret: "natwest-demo-secret-key-for-jwt-signing-should-be-much-longer-in-production"
+      expiration: 3600000 # 1 hour in milliseconds
+      issuer: "http://localhost:9000/auth"
+    
+    # Demo Configuration
+    demo:
+      create-sample-data: true
+      sample-clients:
+        - clientId: "retail-payment-service"
+          clientSecret: "payment-secret-2024"
+          tenantId: "retail-banking"
+          scopes: "read:accounts,write:transactions"
+        - clientId: "corporate-treasury-service"
+          clientSecret: "treasury-secret-2024"
+          tenantId: "corporate-banking"
+          scopes: "read:treasury,write:treasury"
+
